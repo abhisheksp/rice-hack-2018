@@ -2,7 +2,17 @@ import re
 
 
 def find_brand(email_content):
-    supported_brands = ['ALDO', 'Rakuten', 'BestBuy', 'Lyft', 'Uber', 'Domino', 'Newegg']
+    supported_brands = ['ALDO',
+                        'Rakuten',
+                        'BestBuy',
+                        'Lyft',
+                        'Uber',
+                        'Domino',
+                        'Newegg',
+                        'Expedia',
+                        'Booking.com',
+                        'Hotwire',
+                        'Nike']
     for brand in supported_brands:
         if brand in email_content:
             return brand
@@ -35,14 +45,17 @@ def find_products(brand):
         'Newegg': ['computer', 'laptop', 'software'],
         'Lyft': ['taxi'],
         'Uber': ['taxi', 'food delivery'],
-        'Domino': ['food']
+        'Domino': ['food delivery'],
+        'Expedia': ['travel'],
+        'Booking.com': ['travel'],
+        'Hotwire': ['travel'],
     }
     products_str = ';'.join(brand_products[brand])
     return products_str
 
 
 def parse_email(email):
-    email_content = email['emailSubject'] + ' '+email['emailBody']
+    email_content = email['emailSubject'] + ' ' + email['emailBody']
     email_time = email['emailTime']
     discount = find_discount(email_content)
     if discount == '':
