@@ -4,6 +4,7 @@ import hashlib
 from firebase_admin import initialize_app
 from firebase_admin import credentials
 from firebase_admin import db
+from email_parser import parse_emails
 
 # Fetch the service account key JSON file contents
 cred = credentials.Certificate('ricehack2018-firebase-adminsdk-ukl68-192239081c.json')
@@ -16,37 +17,6 @@ initialize_app(cred, {
 # TODO: possible improvements
 # 1. add appropriate index
 # 2. trigger asynchronously
-
-def parse_email(email_content):
-    aldo_offer = {
-        'email_date': '09/15/2018',
-        'vendor': 'ALDO',
-        'coupon_code': 'HJASBDKJ',
-        'expire_date': '09/15/2018',
-        'product_types': ['shoe', 'bag'],
-        'discount': 50,
-    }
-
-    bestbuy_offer = {
-        'email_date': '09/16/2018',
-        'vendor': 'BestBuy',
-        'coupon_code': 'HJASBDKJ',
-        'expire_date': '10/01/2018',
-        'product_types': ['mobile', 'laptop', 'camera', 'television'],
-        'discount': 40,
-    }
-
-    # TODO: update parsing logic once hardcoded email API is completed
-    if 'ALDO' in email_content:
-        return aldo_offer
-    else:
-        return bestbuy_offer
-
-
-def parse_emails(emails):
-    user_offers = list(map(parse_email, emails))
-    return user_offers
-
 
 def save_new_user_offers(user_id, new_offers):
     ref = db.reference('/offers/users/')
@@ -125,6 +95,10 @@ def reset_user_details(user_id):
     ref.set({})
 
 
-# reset_offers(hash('abhisheksp1993'))
-# reset_user_details(hash('abhisheksp1993'))
+def reset_all():
+    ref = db.reference('/')
+    ref.set({})
+
+
+# reset_all()
 # test_runner()
