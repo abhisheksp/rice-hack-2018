@@ -2,6 +2,10 @@
 # Reference: https://intellij-support.jetbrains.com/hc/en-us/articles/206544839
 
 .idea/
+__pycache__/
+
+# Ignore certificates
+ricehack2018-firebase-adminsdk-ukl68-192239081c.json
 
 # User-specific stuff
 .idea/**/workspace.xml
