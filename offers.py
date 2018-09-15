@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import hashlib
+import re
 from firebase_admin import initialize_app
 from firebase_admin import credentials
 from firebase_admin import db
@@ -46,18 +47,18 @@ def test_runner():
     emails = [
         {
             "emailTime": "1537015269000",
-            "emailBody": "Email Date: mm/dd/yyyy Vendor: ALDO Coupon Code: XXX Expiry: mm/dd/yyyy Product Type:Bag Discount: 50% ‌",
-            "emailSubject": "Email Date: mm/dd/yyyy Vendor: ALDO Coupon Code: XXX Expiry: mm/dd/yyyy Product Type:Bag Discount: 50% ‌"
+            "emailBody": "Present coupon in store or enter code online to redeem 15% off any purchase of at least $75 USD before tax (subject exceptions below), within 30 days of receiving this coupon. Offer applies to in-store purchases at Aldo store locations and online at aldoshoes.com. Offer not valid towards the purchase of footwear care products, gift cards, previous purchases and cannot be combined with any other offer or promotion. After 30 days, this offer is null and void. Coupon may not be re-issued, re-validated or redeemed for cash. All applicable sales taxes excluded. Valid for one-time use only. Aldo is not responsible if coupon is lost, stolen or used without authorization.‌",
+            "emailSubject": "Here is your 15% coupon from ALDO! Happy Shopping!‌"
         },
         {
             "emailTime": "1537029703000",
-            "emailBody": "Email Date: mm/dd/yyyy Vendor: ALDO Coupon Code: XXX Expiry: mm/dd/yyyy Product Type:Bag2 Discount: 50% ‌",
-            "emailSubject": "Email Date: mm/dd/yyyy Vendor: ALDO Coupon Code: XXX Expiry: mm/dd/yyyy Product Type:Bag2 Discount: 50% ‌"
+            "emailBody": "20% off on Clothing, Shoes and Accessories Category & **20% off on Bags and Luggage Category: 20% discount up to $30 maximum discount. Valid from 9/11/18 at 12:00AM (PST) until 9/17/18 at 11:59PM (PST) or until promotional funding is exhausted, whichever occurs first. Rakuten.com reserves the right to cancel, modify or limit the promotion at any time in its sole discretion. This promotion is open only to individuals 18 or older and must establish a Rakuten.com account or be signed into their Rakuten.com account to apply the Coupon Code APPAREL20 and BAGS20. This Coupon Code is valid for one-time use and can be used only once per account within a single transaction with one merchant, while supplies last. Limit one redemption for each coupon per household. Coupon code exclude certain products due to the merchant’s sales restriction. Gift cards cannot be redeemed in conjunction with this promotion. Bulk purchases made by re-sellers do not qualify. This promotion is not valid with any other offer. You are responsible to pay for any applicable sales tax on your purchase and this is valid in U.S. only.‌",
+            "emailSubject": "2 Days of Earning 20% Back in Points Sitewide‌"
         },
         {
             "emailTime": "1537036010000",
-            "emailBody": "PFA ---------- Forwarded message --------- From: noreply@inmoment.com &lt;noreply@inmomentfeedback.com&gt; Date: Wed, Aug 22, 2018 at 12:55 AM Subject: Here is your 15% coupon from ALDO! Happy Shopping",
-            "emailSubject": "PFA ---------- Forwarded message --------- From: noreply@inmoment.com &lt;noreply@inmomentfeedback.com&gt; Date: Wed, Aug 22, 2018 at 12:55 AM Subject: Here is your 15% coupon from ALDO! Happy Shopping"
+            "emailBody": "PFA ---------- Forwarded message --------- From: noreply@inmoment.com &lt;noreply@inmomentfeedback.com&gt; Date: Wed, Aug 22, 2018 at 12:55 AM Subject: Aldo",
+            "emailSubject": "PFA ---------- Forwarded message --------- From: noreply@inmoment.com &lt;noreply@inmomentfeedback.com&gt; Date: Wed, Aug 22, 2018 at 12:55 AM Subject: Here is your coupon from ALDO! Happy Shopping"
         },
         {
             "emailTime": "1537029674000",
