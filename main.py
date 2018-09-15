@@ -13,9 +13,13 @@ def home():
 @app.route('/update/offers', methods=['POST'])
 def update_offers_handler():
     request_body = request.get_json()
-    user_id = request_body['user_id']
+    user_details = {
+        'user': request_body['user'],
+        'updatedTime': request_body['updatedTime'],
+        'token': request_body['token']
+    }
     emails = request_body['emails']
-    update_user_offers(user_id, emails)
+    update_user_offers(user_details, emails)
     return jsonify({'offers_updated': True})
 
 

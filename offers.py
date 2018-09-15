@@ -1,11 +1,14 @@
-import firebase_admin
+# -*- coding: utf-8 -*-
+
+import hashlib
+from firebase_admin import initialize_app
 from firebase_admin import credentials
 from firebase_admin import db
 
 # Fetch the service account key JSON file contents
 cred = credentials.Certificate('ricehack2018-firebase-adminsdk-ukl68-192239081c.json')
 # Initialize the app with a service account, granting admin privileges
-firebase_admin.initialize_app(cred, {
+initialize_app(cred, {
     'databaseURL': 'https://ricehack2018.firebaseio.com/'
 })
 
@@ -52,34 +55,64 @@ def save_new_user_offers(user_id, new_offers):
     ref.update({user_id: existing_offers})
 
 
-def update_user_offers(user_id, emails):
+def update_user_metadata(user_id, user_details):
+    ref = db.reference('/users')
+    ref.update({user_id: user_details})
+
+
+def hash(key):
+    return hashlib.md5(key.encode()).hexdigest()
+
+
+def update_user_offers(user_details, emails):
+    user_id = hash(user_details['user'])
     new_offers = parse_emails(emails)
+    update_user_metadata(user_id, user_details)
     save_new_user_offers(user_id, new_offers)
 
 
 # TEST
 def test_runner():
-    aldo_email = '''
-    ALDO Offer
+    emails = [
+        {
+            "emailTime": "1537015269000",
+            "emailBody": "Email Date: mm/dd/yyyy Vendor: ALDO Coupon Code: XXX Expiry: mm/dd/yyyy Product Type:Bag Discount: 50% ‌",
+            "emailSubject": "Email Date: mm/dd/yyyy Vendor: ALDO Coupon Code: XXX Expiry: mm/dd/yyyy Product Type:Bag Discount: 50% ‌"
+        },
+        {
+            "emailTime": "1537029703000",
+            "emailBody": "Email Date: mm/dd/yyyy Vendor: ALDO Coupon Code: XXX Expiry: mm/dd/yyyy Product Type:Bag2 Discount: 50% ‌",
+            "emailSubject": "Email Date: mm/dd/yyyy Vendor: ALDO Coupon Code: XXX Expiry: mm/dd/yyyy Product Type:Bag2 Discount: 50% ‌"
+        },
+        {
+            "emailTime": "1537036010000",
+            "emailBody": "PFA ---------- Forwarded message --------- From: noreply@inmoment.com &lt;noreply@inmomentfeedback.com&gt; Date: Wed, Aug 22, 2018 at 12:55 AM Subject: Here is your 15% coupon from ALDO! Happy Shopping",
+            "emailSubject": "PFA ---------- Forwarded message --------- From: noreply@inmoment.com &lt;noreply@inmomentfeedback.com&gt; Date: Wed, Aug 22, 2018 at 12:55 AM Subject: Here is your 15% coupon from ALDO! Happy Shopping"
+        },
+        {
+            "emailTime": "1537029674000",
+            "emailBody": "Email Date: mm/dd/yyyy Vendor: ALDO Coupon Code: XXX Expiry: mm/dd/yyyy Product Type:Bag1 Discount: 50% ‌",
+            "emailSubject": "Email Date: mm/dd/yyyy Vendor: ALDO Coupon Code: XXX Expiry: mm/dd/yyyy Product Type:Bag1 Discount: 50% ‌"
+        },
+        {
+            "emailTime": "1537036199000",
+            "emailBody": "PFA ---------- Forwarded message --------- From: ALDO &lt;aldoshoes@e.aldoshoes.com&gt; Date: Wed, Sep 12, 2018 at 8:08 AM Subject: 🚨 60% off everything! 🚨 To: &lt;agrawroh@bu.edu&gt; Make the most of",
+            "emailSubject": "PFA ---------- Forwarded message --------- From: ALDO &lt;aldoshoes@e.aldoshoes.com&gt; Date: Wed, Sep 12, 2018 at 8:08 AM Subject: 🚨 60% off everything! 🚨 To: &lt;agrawroh@bu.edu&gt; Make the most of"
+        }
+    ]
 
-    Free Shipping!
-
-    {ALDO_PRODUCTS}
-
-    Valid until October 19th, 2018.
-    '''
-    bestbuy_email = '''
-    BestBuy Offer
-
-    Best deals in the world!
-
-    {BestBuy_PRODUCTS}
-
-    Valid until September 29th, 2018.
-    '''
-    user_id = 'abhisheksp1993'
-    emails = [aldo_email, bestbuy_email]
-    update_user_offers(user_id, emails)
+    user_details = {
+        'user': 'abhisheksp1993',
+        "updatedTime": 1537036469719,
+        "token": {
+            "access_token": "ya29.GlsZBmtI8NPmyPkM1DKqldpm0GMVZ9k52EYmEG0e1c2UdsB0htevDkbLCTxQdpgEw0auhIvKTq08n_w5We9rqINWuFTT1HnYyMEzf2hL3CRks3whal5ivfYhVjau",
+            "refresh_token": "1/eKl8qv_0a7zdS6tbVDfdEEbdzkmystvYpwxxjPrNYm8",
+            "scope": "https://www.googleapis.com/auth/gmail.readonly",
+            "token_type": "Bearer",
+            "expiry_date": 1536990182016
+        },
+    }
+    update_user_offers(user_details, emails)
 
 
 def reset_offers(user_id):
@@ -87,5 +120,11 @@ def reset_offers(user_id):
     ref.set({})
 
 
-# reset_offers('abhisheksp1993')
+def reset_user_details(user_id):
+    ref = db.reference('/users/{}'.format(user_id))
+    ref.set({})
+
+
+# reset_offers(hash('abhisheksp1993'))
+# reset_user_details(hash('abhisheksp1993'))
 # test_runner()
