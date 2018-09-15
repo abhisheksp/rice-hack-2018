@@ -5,6 +5,11 @@ app = Flask(__name__)
 app.config["DEBUG"] = True
 
 
+@app.route('/', methods=['GET'])
+def home():
+    return '<h1>Works!</h1>'
+
+
 @app.route('/update/offers', methods=['POST'])
 def update_offers_handler():
     request_body = request.get_json()
