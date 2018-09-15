@@ -2,7 +2,7 @@ import re
 
 
 def find_brand(email_content):
-    supported_brands = ['ALDO']
+    supported_brands = ['ALDO', 'Rakuten', 'BestBuy', 'Lyft', 'Uber', 'Domino', 'Newegg']
     for brand in supported_brands:
         if brand in email_content:
             return brand
@@ -29,16 +29,26 @@ def find_expire_date(email_content):
 def find_products(brand):
     brand_products = {
         'ALDO': ['shoe', 'bag'],
-        'Nike': ['shoe']
+        'Nike': ['shoe'],
+        'Rakuten': ['computer', 'laptop', 'video game', 'music', 'sporting good'],
+        'BestBuy': ['computer', 'laptop', 'headphone', 'television', 'camera'],
+        'Newegg': ['computer', 'laptop', 'software'],
+        'Lyft': ['taxi'],
+        'Uber': ['taxi', 'food delivery'],
+        'Domino': ['food']
     }
-    return brand_products[brand]
+    products_str = ';'.join(brand_products[brand])
+    return products_str
 
 
 def parse_email(email):
-    email_content = email['emailBody']
+    email_content = email['emailSubject'] + ' '+email['emailBody']
     email_time = email['emailTime']
-    brand = find_brand(email_content)
     discount = find_discount(email_content)
+    if discount == '':
+        return None
+
+    brand = find_brand(email_content)
     coupon_code = find_coupon_code(email_content)
     expire_date = find_expire_date(email_content)
     products = find_products(brand)
@@ -55,5 +65,5 @@ def parse_email(email):
 
 
 def parse_emails(emails):
-    user_offers = list(map(parse_email, emails))
+    user_offers = list(filter(lambda x: x is not None, map(parse_email, emails)))
     return user_offers
