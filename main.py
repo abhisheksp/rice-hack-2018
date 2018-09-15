@@ -13,4 +13,6 @@ def update_offers_handler():
     update_user_offers(user_id, emails)
     return jsonify({'offers_updated': True})
 
-app.run()
+
+if __name__ == '__main__':
+    app.run()
