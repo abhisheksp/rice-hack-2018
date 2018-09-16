@@ -12,7 +12,11 @@ def find_brand(email_content):
                         'Expedia',
                         'Booking.com',
                         'Hotwire',
-                        'Nike']
+                        'Nike',
+                        'Moviepass',
+                        'Cinemark',
+                        'Sinemia'
+                        ]
     for brand in supported_brands:
         if brand in email_content:
             return brand
@@ -38,17 +42,20 @@ def find_expire_date(email_content):
 
 def find_products(brand):
     brand_products = {
-        'ALDO': ['shoe', 'bag'],
-        'Nike': ['shoe'],
-        'Rakuten': ['computer', 'laptop', 'video game', 'music', 'sporting good'],
-        'BestBuy': ['computer', 'laptop', 'headphone', 'television', 'camera'],
-        'Newegg': ['computer', 'laptop', 'software'],
+        'ALDO': ['fashion', 'shoe', 'bag'],
+        'Nike': ['fashion', 'shoe'],
+        'Rakuten': ['ecommerce', 'computer', 'laptop', 'video game', 'music', 'sporting good'],
+        'BestBuy': ['ecommerce', 'computer', 'laptop', 'headphone', 'television', 'camera'],
+        'Newegg': ['ecommerce', 'computer', 'laptop', 'software'],
         'Lyft': ['taxi'],
         'Uber': ['taxi', 'food delivery'],
         'Domino': ['food delivery'],
         'Expedia': ['travel'],
         'Booking.com': ['travel'],
         'Hotwire': ['travel'],
+        'Moviepass': ['entertainment'],
+        'Cinemark':  ['entertainment'],
+        'Sinemia': ['entertainment'],
     }
     products_str = ';'.join(brand_products[brand])
     return products_str
